@@ -51,7 +51,7 @@ export default function App() {
   const [titleText, setTitleText] = useState('EDAMM P3 - WebRTC Live Streaming')
 
   // TODO Actividad 4: estado para la imagen del logo (HTMLImageElement | null)
-  // const [logoImg, setLogoImg] = useState(null)
+  const [logoImg, setLogoImg] = useState(null)
 
   // ── Estado: cámara (Sesión 2) ─────────────────────────────────────────────
   // TODO Actividad 5: estado para activar/desactivar cámara
@@ -108,6 +108,11 @@ export default function App() {
       ctx.fillText(titleText, pad, canvas.height - textH / 2 - pad);
 }
     // TODO Actividad 4: dibujar logo (si logoImg)
+    if (logoImg) {
+      const logoW = 72
+      const logoH = logoW * (logoImg.height / logoImg.width)
+      ctx.drawImage(logoImg, CANVAS_W - logoW - 10, 10, logoW, logoH)
+}
     //   - const logoW = 72
     //   - const logoH = logoW * (logoImg.height / logoImg.width)
     //   - ctx.drawImage(logoImg, CANVAS_W - logoW - 10, 10, logoW, logoH)
@@ -119,7 +124,7 @@ export default function App() {
   // logoImg en las dependencias hace que el bucle use siempre el valor actual
   // TODO Actividad 4: añadir logoImg a esta lista
   // TODO Actividad 5: añadir cameraOn
-  }, [showTitle, titleText])
+  }, [showTitle, titleText, logoImg]);
 
   // Arrancar/parar RAF cuando el vídeo reproduzca o pause
   useEffect(() => {
@@ -149,14 +154,14 @@ export default function App() {
     const file = e.target.files[0]
     if (!file) return
     // TODO Actividad 4:
-    // 1. const img = new Image()
-    // 2. img.onload = () => setLogoImg(img)
-    // 3. img.src = URL.createObjectURL(file)
+      const img = new Image()
+      img.onload = () => setLogoImg(img)
+      img.src = URL.createObjectURL(file)
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // Actividad 5 · Capturar cámara y conectar al <video> PiP
-  // ═════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════
   async function toggleCamera() {
     // TODO Actividad 5:
     // Si cameraOn:
@@ -219,9 +224,9 @@ export default function App() {
         <span className="divider">|</span>
 
         {/* Actividad 4: file input para el logo */}
-         {/*<label className="ctrl-file"> Logo:
+         {<label className="ctrl-file"> Logo:
           <input type="file" accept="image/*" onChange={handleLogoFile} />
-        </label>*/}
+        </label>}
 
         <span className="divider">|</span>
 
