@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom'
 import './App.css'
 
 // TODO Actividad 1: importar dashjs
-// import * as dashjs from 'dashjs'
+import * as dashjs from 'dashjs'
 
 // TODO Actividad 7: importar Peer de peerjs
 // import Peer from 'peerjs'
@@ -71,11 +71,11 @@ export default function App() {
     const video = videoRef.current
     if (!video) return
     // TODO Actividad 1: crear e inicializar el player DASH
-    // const player = dashjs.MediaPlayer().create()
-    // player.initialize(video, DASH_URL, false)
-    // playerRef.current = player
+    const player = dashjs.MediaPlayer().create()
+    player.initialize(video, DASH_URL, false)
+    playerRef.current = player
 
-    // return () => { playerRef.current?.reset() }
+    return () => { playerRef.current?.reset() }
   }, [])
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -86,15 +86,27 @@ export default function App() {
     const canvas = canvasRef.current
     if (!canvas) return
     // TODO Actividad 2: obtener contexto con willReadFrequently
-    // const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
     // TODO Actividad 2: dibujar el frame de vídeo
-    // ctx.drawImage(video, 0, 0, CANVAS_W, CANVAS_H)
+    ctx.drawImage(video, 0, 0, CANVAS_W, CANVAS_H)
+    
 
     // TODO Actividad 3: dibujar overlay de título (si showTitle)
     //   - Dibuja un rectángulo oscuro en la parte inferior
     //   - Escribe titleText en blanco encima
-
+    if (showTitle && titleText.trim()) {
+      const pad = 12, textH = 28;
+      // Banda semitransparente en la parte inferior
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+      ctx.fillRect(0, canvas.height - textH - pad * 2,
+      canvas.width, textH + pad * 2);
+      // Texto en blanco
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${textH}px sans-serif`;
+      ctx.textBaseline = 'middle';
+      ctx.fillText(titleText, pad, canvas.height - textH / 2 - pad);
+}
     // TODO Actividad 4: dibujar logo (si logoImg)
     //   - const logoW = 72
     //   - const logoH = logoW * (logoImg.height / logoImg.width)
@@ -193,16 +205,16 @@ export default function App() {
 
         {/* Actividad 3: checkbox + campo de texto para el título */}
         <label className="ctrl-check">
-          {/*<input type="checkbox"
+          {<input type="checkbox"
             checked={showTitle}
-            onChange={e => setShowTitle(e.target.checked)}/>*/}
+            onChange={e => setShowTitle(e.target.checked)}/>}
           Mostrar título
         </label>
-        {/*<input className="ctrl-text" type="text"
+        {<input className="ctrl-text" type="text"
           value={titleText}
           onChange={e => setTitleText(e.target.value)}
           disabled={!showTitle}
-          placeholder="Texto del título…"/>*/}
+          placeholder="Texto del título…"/>}
 
         <span className="divider">|</span>
 
